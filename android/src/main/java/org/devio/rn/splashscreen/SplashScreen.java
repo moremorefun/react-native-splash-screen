@@ -18,6 +18,7 @@ import java.lang.ref.WeakReference;
 public class SplashScreen {
     private static Dialog mSplashDialog;
     private static WeakReference<Activity> mActivity;
+    private static boolean isShowing;
 
     /**
      * 打开启动屏
@@ -29,6 +30,10 @@ public class SplashScreen {
             @Override
             public void run() {
                 if (!activity.isFinishing()) {
+                    if (isShowing) {
+                        return;
+                    }
+                    isShowing = true;
                     mSplashDialog = new Dialog(activity, themeResId);
                     mSplashDialog.setContentView(R.layout.launch_screen);
                     mSplashDialog.setCancelable(false);
@@ -65,12 +70,16 @@ public class SplashScreen {
     public static void hide(Activity activity) {
         if (activity == null) {
             if (mActivity == null) {
+                isShowing = false;
                 return;
             }
             activity = mActivity.get();
         }
 
-        if (activity == null) return;
+        if (activity == null) {
+            isShowing = false;
+            return;
+        }
 
         final Activity _activity = activity;
 
@@ -88,6 +97,7 @@ public class SplashScreen {
                         mSplashDialog.dismiss();
                     }
                     mSplashDialog = null;
+                    isShowing = false;
                 }
             }
         });

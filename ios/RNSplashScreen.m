@@ -13,6 +13,8 @@
 static bool waiting = true;
 static bool addedJsLoadErrorObserver = false;
 static UIView* loadingView = nil;
+static bool isShowing = false;
+static UIView *saveRootView = nil;
 
 @implementation RNSplashScreen
 - (dispatch_queue_t)methodQueue{
@@ -21,6 +23,10 @@ static UIView* loadingView = nil;
 RCT_EXPORT_MODULE(SplashScreen)
 
 + (void)show {
+    if (isShowing) {
+        return;
+    }
+    isShowing = true;
     if (!addedJsLoadErrorObserver) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jsLoadError:) name:RCTJavaScriptDidFailToLoadNotification object:nil];
         addedJsLoadErrorObserver = true;
@@ -33,6 +39,11 @@ RCT_EXPORT_MODULE(SplashScreen)
 }
 
 + (void)showSplash:(NSString*)splashScreen inRootView:(UIView*)rootView {
+    if (isShowing) {
+        return;
+    }
+    saveRootView = rootView;
+    isShowing = true;
     if (!loadingView) {
         UIStoryboard *sb = [UIStoryboard storyboardWithName:@"LaunchScreen" bundle:nil];
         UIViewController *vc = [sb instantiateInitialViewController];
@@ -50,10 +61,12 @@ RCT_EXPORT_MODULE(SplashScreen)
     if (waiting) {
         dispatch_async(dispatch_get_main_queue(), ^{
             waiting = false;
+            isShowing = false;
         });
     } else {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [loadingView removeFromSuperview];
+            isShowing = false;
         });
     }
 }
@@ -69,7 +82,11 @@ RCT_EXPORT_METHOD(hide) {
 }
 
 RCT_EXPORT_METHOD(show) {
-    [RNSplashScreen show];
+    if (saveRootView == nil) {
+        [RNSplashScreen show];
+    } else {
+        [RNSplashScreen showSplash:@"LaunchScreen" inRootView:saveRootView];
+    }
 }
 
 @end
