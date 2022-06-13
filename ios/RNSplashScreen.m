@@ -89,4 +89,14 @@ RCT_EXPORT_METHOD(show) {
     }
 }
 
+RCT_EXPORT_METHOD(isSplashShowing:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+{
+    if (isShowing) {
+        resolve(@YES);
+    } else {
+        resolve(@NO);
+    }
+}
+
 @end

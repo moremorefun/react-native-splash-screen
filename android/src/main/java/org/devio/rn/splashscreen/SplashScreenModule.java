@@ -3,6 +3,7 @@ package org.devio.rn.splashscreen;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.Promise;
 
 /**
  * SplashScreen
@@ -36,5 +37,13 @@ public class SplashScreenModule extends ReactContextBaseJavaModule{
     @ReactMethod
     public void hide() {
         SplashScreen.hide(getCurrentActivity());
+    }
+
+    /**
+     * 是否正在显示
+     */
+    @ReactMethod
+    public void isSplashShowing(Promise promise) {
+        promise.resolve(isShowing);
     }
 }
