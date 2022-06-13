@@ -44,6 +44,6 @@ public class SplashScreenModule extends ReactContextBaseJavaModule{
      */
     @ReactMethod
     public void isSplashShowing(Promise promise) {
-        promise.resolve(isShowing);
+        promise.resolve(SplashScreen.isShowing);
     }
 }

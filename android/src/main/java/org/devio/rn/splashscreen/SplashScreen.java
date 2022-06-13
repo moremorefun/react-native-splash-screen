@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference;
 public class SplashScreen {
     private static Dialog mSplashDialog;
     private static WeakReference<Activity> mActivity;
-    private static boolean isShowing;
+    public static boolean isShowing;
 
     /**
      * 打开启动屏
