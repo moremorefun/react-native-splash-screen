@@ -94,7 +94,11 @@ public class SplashScreen {
                     }
 
                     if (!_activity.isFinishing() && !isDestroyed) {
-                        mSplashDialog.dismiss();
+                        try {
+                            mSplashDialog.dismiss();
+                        } catch (Exception ignored) {
+
+                        }
                     }
                     mSplashDialog = null;
                     isShowing = false;
